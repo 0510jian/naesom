@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="fragment/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>내솜 :: 공장</title>
+    <link rel="stylesheet" th:href="@{/static/css/default.css?after}">
+</head>
+<body>
+    <th:block layout:fragment="content">
+    <div id="filter">
+        <details open>
+            <summary><span>▼</span> 크기</summary>
+            <ul>
+                <th:block th:if="${size > 0}">
+                    <th:block th:each="eachSize:${sizeList}">
+                        <li class="filter_item">
+                            <label><input type="checkbox" th:value="${eachSize.id}"><span th:text="${eachSize.size} + 'cm'"></span></label>
+                        </li>
+                    </th:block>
+                </th:block>
+                <th:block th:unless="${size > 0}">
+                    <li>no size select</li>
+                </th:block>
+            </ul>    
+        </details>
+        <hr id="filter_hr">
+        <details open>
+            <summary><span>▼</span> 추가 조건</summary>
+            <ul>
+                <li class="filter_item">
+                    <label><input type="checkbox" value="ko_csr">한국어 상담</label>
+                </li>
+                <li class="filter_item">
+                    <label><input type="checkbox" value="one">개인제작(사생)</label>
+                </li>
+                <li class="filter_item">
+                    <label><input type="checkbox" value="">사업자 인증</label>
+                </li>
+            </ul>        
+        </details>
+    </div>
+    <div id="contents">
+        <div class="factories">
+            <ul class="factory_grid">
+                <th:block th:unless="${factoryList == null}">
+                    <th:block th:if="${#lists.size(factoryList)} > 0" th:each="factory:${factoryList}">
+                        <li class="factory_item">
+                            <div class="thumbnail"><img class="factory_thumb"></div>
+                            <div class="description" th:text="${factory.koName}">adjklffldaskjsdkljlk</div>
+                        </li>
+                    </th:block>
+                </th:block>
+            </ul>
+        </div>
+    </div>
+    </th:block>
+</body>
+</html>
+
+<script>
+
+</script>

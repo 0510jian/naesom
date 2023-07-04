@@ -26,6 +26,21 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// mysql
+	implementation 'com.mysql:mysql-connector-j'
+
+	// jpa(@Entity)
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	// thymeleaf
+	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+
+	// mybatis
+	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.2'
+
+	// jdbc log
+	'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4'
 }
 
 tasks.named('test') {
