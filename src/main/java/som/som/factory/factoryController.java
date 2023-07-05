@@ -7,13 +7,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import som.som.DTO.factoryDTO;
-import som.som.DTO.factorySizeDTO;
-import som.som.DTO.sizeDTO;
 import som.som.Entity.factory;
 import som.som.Entity.factorySize;
 import som.som.Entity.size;
-import som.som.Repository.factoryRepository;
 
 import java.util.ArrayList;
 import java.util.List;

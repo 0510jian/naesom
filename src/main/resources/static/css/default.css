@@ -1,0 +1,140 @@
+@font-face {
+    font-family: 'SUIT-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Regular.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    list-style: none;
+}
+
+header, footer {
+    background: lightcoral;
+}
+
+header {
+    height: 150px;
+}
+
+body {
+    font-family: 'Pretendard-Regular';
+    width: 100%;
+    height: auto;
+    background: #fff;
+}
+
+#mainContainer {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+nav {
+    height: 50px;
+    margin: 10px 10%;
+}
+
+.nav_list {
+    width: 100%;
+    text-align: center;
+}
+
+.nav_item {
+    padding: 0 10%;
+    display: inline-block;
+    line-height: 50px;
+}
+
+#filter {
+    position: absolute;
+    top: 250px;
+    width: 150px;
+
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+.filter_item {
+    padding: 5px 0;
+}
+
+.filter_item input {
+    margin-right: 5px;
+}
+
+#filter_hr {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#filter details {
+    padding: 10px;
+}
+
+#filter summary {
+    font-weight: bold;  
+    padding: 5px 0;
+}
+
+#contents {
+    margin: 50px 0;
+    
+    min-height: 500px;
+}
+
+#content_grid {
+    margin-left: 180px;    
+}
+
+.factory_grid {
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 170px));
+}
+
+.factory_item {
+    width:150px;
+    height:155px;
+    padding: 10px;
+    text-align: center;
+    justify-items: center;
+}
+
+.thumbnail, .factory_thumb {
+    width: 130px;
+    height:130px;
+    margin: auto;
+}
+
+.description {
+    padding-top: 5px;
+}
+
+#search {
+    text-align: right;
+}
+
+.btn_search {
+    background: none;
+    border-style: none;
+    vertical-align: middle;
+}
+
+#query {
+    border-radius: 10px;
+    border-style: none;
+    background: gainsboro;
+    padding: 5px 10px;
+    outline: none;
+}

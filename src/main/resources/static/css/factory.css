@@ -1,0 +1,14 @@
+#factory_detail {
+    background: lightgoldenrodyellow;
+}
+
+.factory_thumb {
+    float : left;
+    width: 500px;
+    height: 500px;
+    background: lightpink;
+}
+
+.factory_info {
+    float: right;
+}
