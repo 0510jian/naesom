@@ -10,7 +10,6 @@ import org.springframework.web.servlet.ModelAndView;
 import som.som.DTO.factoryDTO;
 import som.som.DTO.factorySizeDTO;
 import som.som.DTO.sizeDTO;
-import som.som.Entitty.factory;
 
 import java.util.ArrayList;
 

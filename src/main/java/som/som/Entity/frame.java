@@ -1,18 +1,20 @@
-package som.som.DTO;
+package som.som.Entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 @NoArgsConstructor
 @Getter
-@Setter
 @ToString
-
-public class sizeDTO {
+@Entity
+public class frame {
+    @Id
     private int id;
-    private String size;
+    private String userId;
+    private int licenseId;
+    private String illustrator;
+    private String url;
 }
