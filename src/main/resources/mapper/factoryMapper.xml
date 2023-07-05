@@ -18,4 +18,10 @@
         select *
         from size
     </select>
+
+    <select id="selectFactoryById" parameterType="int" resultType="som.som.DTO.factoryDTO">
+        select *
+        from factory
+        where id = #{factoryId}
+    </select>
 </mapper>

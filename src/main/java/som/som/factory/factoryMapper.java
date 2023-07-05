@@ -12,6 +12,7 @@ public interface factoryMapper {
     public ArrayList<factoryDTO> selectFactory() throws Exception;
     public ArrayList<factorySizeDTO> selectFactorySize() throws Exception;
     public ArrayList<sizeDTO> selectSize() throws Exception;
+
 }
 
 

@@ -3,11 +3,14 @@ package som.som.factory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import som.som.DTO.factoryDTO;
 import som.som.DTO.factorySizeDTO;
 import som.som.DTO.sizeDTO;
+import som.som.Entitty.factory;
 
 import java.util.ArrayList;
 
@@ -21,13 +24,12 @@ public class factoryController {
     @GetMapping("/factory")
     public ModelAndView factoryMain(
     ) throws Exception {
-        ModelAndView mv = new ModelAndView("/factory/board");
+        ModelAndView mv = new ModelAndView("/factory/factoryList");
 
         // factory 리스트
         ArrayList<factoryDTO> factoryList = service.selectFactory();
         mv.addObject("factoryList", factoryList);
 
-        // factorySize 리스트를 사이즈별로 재배열
         ArrayList<factorySizeDTO> factorySizeList = service.selectFactorySize();
         ArrayList<sizeDTO> sizeList = service.selectSize();
         ArrayList<Integer>[] factorySizeSorted = new ArrayList[sizeList.size()];
@@ -40,15 +42,29 @@ public class factoryController {
 
         // size의 개수 = sizeList의 크기
         mv.addObject("size", sizeList.size());
-
-        // sizeList
+        // sizeList : size 테이블 전체 조회한 것
         mv.addObject("sizeList", sizeList);
+        // factorySizeSorted : factorySize 리스트를 사이즈별로 재배열
+        mv.addObject("factorySizeSorted", factorySizeSorted);
 
-        // thymeleaf 이중배열 불가능 => i별로 object 추가
-        // ex > size1 object에 sizeId가 1인 factoryId 배열이 들어감
-        for(int i=1; i< sizeList.size()+1; i++) {
-            mv.addObject("size" + String.valueOf(i), factorySizeSorted[i-1].toArray());
-        }
+        return mv;
+    }
+
+
+    @GetMapping("/factory/search")
+    public String searchFactory(
+            @RequestParam(name = "query") String query
+    ) throws Exception {
+        return "";
+    }
+
+    @GetMapping("/factory/{factoryId}")
+    public ModelAndView factoryDetail(
+            @PathVariable(value = "factoryId") int factoryId
+    ) throws Exception {
+        ModelAndView mv = new ModelAndView("/factory/factoryDetail");
+
+
 
         return mv;
     }

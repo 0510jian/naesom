@@ -20,7 +20,7 @@
 }
 
 header, footer {
-    background: lightgray;
+    background: lightcoral;
 }
 
 header {
@@ -90,8 +90,12 @@ nav {
 
 #contents {
     margin: 50px 0;
-    margin-left: 180px;
+    
     min-height: 500px;
+}
+
+#content_grid {
+    margin-left: 180px;    
 }
 
 .factory_grid {
@@ -115,4 +119,22 @@ nav {
 
 .description {
     padding-top: 5px;
+}
+
+#search {
+    text-align: right;
+}
+
+.btn_search {
+    background: none;
+    border-style: none;
+    vertical-align: middle;
+}
+
+#query {
+    border-radius: 10px;
+    border-style: none;
+    background: gainsboro;
+    padding: 5px 10px;
+    outline: none;
 }
