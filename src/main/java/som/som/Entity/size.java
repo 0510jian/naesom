@@ -9,7 +9,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @Entity
-@Table(name = "size")
+@Table
 public class size {
     @Id
     @Column

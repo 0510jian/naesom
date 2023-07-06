@@ -8,10 +8,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import som.som.Entity.factory;
+import som.som.Entity.factoryExtra;
 import som.som.Entity.factorySize;
 import som.som.Entity.size;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,17 +22,19 @@ import java.util.Optional;
 public class factoryController {
     @Autowired
     private som.som.Repository.factoryRepository factoryRepository;
-
     @Autowired
     private som.som.Repository.sizeRepository sizeRepository;
-
     @Autowired
     private som.som.Repository.factorySizeRepository factorySizeRepository;
+    @Autowired
+    private som.som.Repository.extraRepository extraRepository;
+    @Autowired
+    private som.som.Repository.factoryExtraRepository factoryExtraRepository;
 
     @GetMapping("/factory")
     public ModelAndView factoryMain(
     ) throws Exception {
-        ModelAndView mv = new ModelAndView("/factory/factoryList");
+        ModelAndView mv = new ModelAndView("factory/factoryList");
 
         // factory 리스트
         List<factory> factoryList = factoryRepository.findAll();
@@ -68,10 +72,18 @@ public class factoryController {
     public ModelAndView factoryDetail(
             @PathVariable(value = "factoryId") int factoryId
     ) throws Exception {
-        ModelAndView mv = new ModelAndView("/factory/factoryDetail");
+        ModelAndView mv = new ModelAndView("factory/factoryDetail");
 
+        // factoryId에 해당하는 factory 객체
         Optional<factory> factory = factoryRepository.findById(factoryId);
         mv.addObject("factory", factory);
+
+        // factoryId에 해당하는 factoryExra(옵션 단가)와 option(옵션명)
+        List<factoryExtra> factoryExtraList = factoryExtraRepository.findByFactoryId(factoryId);
+        for(factoryExtra fe : factoryExtraList) {
+            fe.setOption(extraRepository.findById(fe.getExtraId()).get().getOption());
+        }
+        mv.addObject("factoryExtraList", factoryExtraList);
 
         return mv;
     }

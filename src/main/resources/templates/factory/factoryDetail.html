@@ -16,8 +16,49 @@
                 <img>
             </div>
             <div class="factory_info">
-
+                <div class="info_bind">
+                    <h3><span th:text="${factory.get().koName}"/></h3>
+                    <table>
+                        <tr>
+                            <td>웨이보 ID</td>
+                            <td th:unless="${factory.get().weibo == null}">
+                                <a href="https://weibo.com/u/" th:attrappend="href=${factory.get().weibo}">
+                                    <span th:text="${factory.get().weibo}"/>
+                                </a>
+                            </td>
+                            <td th:if="${factory.get().weibo == null}"><span th:text="X"/></td>
+                        </tr>
+                        <tr>
+                            <td>위챗 ID</td>
+                            <td th:unless="${factory.get().wechat == null}"><span th:text="${factory.get().wechat}"/></td>
+                            <td th:if="${factory.get().wechat == null}"><span th:text="X"/></td>
+                        </tr>
+                        <tr>
+                            <td>트위터</td>
+                            <td th:unless="${factory.get().twitter == null}"><span th:text="${factory.get().twitter}"/></td>
+                            <td th:if="${factory.get().twitter == null}"><span th:text="X"/></td>
+                        </tr>
+                    </table>
+                    <hr>
+                </div>
             </div>
+        </div>
+        <div class="factory_price">
+            <h3>가격 정보</h3>
+            <th:block th:unless="${factoryExtraList == null}">
+                <table class="price_table"  th:if="${#lists.size(factoryExtraList)} > 0">
+                    <th:block th:each="factoryExtra:${factoryExtraList}">
+                        <tr>
+                            <td><span th:text="${factoryExtra.option}"/></td>
+                            <td><span th:text="${factoryExtra.amount}"/></td>
+                        </tr>
+                    </th:block>
+                </table>
+                <th:block th:unless="${#lists.size(factoryExtraList)} > 0">
+                    <div id="warning_noPrice">등록된 가격 정보가 존재하지 않습니다.</div>
+                </th:block>
+            </th:block>
+            
         </div>
     </div>
     </th:block>

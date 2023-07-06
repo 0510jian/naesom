@@ -9,7 +9,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @Entity
-@Table(name="factory")
+@Table
 public class factory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,18 +27,12 @@ public class factory {
     private String twitter;
     @Column(name="ko_csr")
     private boolean koCsr;
-    @Column(name="start_price")
-    private Integer startPrice;
-    @Column(name="copy_price")
-    private Integer copyPrice;
-    @Column(name="faster_price")
-    private Integer fasterPrice;
-    @Column(name="event_price")
-    private Integer eventPrice;
     @Column
     private Integer duration;
     @Column
     private boolean certification;
     @Column
     private boolean personal;
+    @Column
+    private String thumb;
 }
