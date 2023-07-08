@@ -13,7 +13,6 @@ import som.som.Entity.factorySize;
 import som.som.Entity.size;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,10 +61,33 @@ public class factoryController {
 
 
     @GetMapping("/factory/search")
-    public String searchFactory(
+    public ModelAndView searchFactory(
             @RequestParam(name = "query") String query
     ) throws Exception {
-        return "";
+        ModelAndView mv = new ModelAndView("factory/factoryList");
+
+        // 검색한 factory 리스트
+        List<factory> factoryList = factoryRepository.findByKoNameContaining(query);
+        mv.addObject("factoryList", factoryList);
+
+        List<factorySize> factorySizeList = factorySizeRepository.findAll();
+        List<size> sizeList = sizeRepository.findAll();
+        ArrayList<Integer>[] factorySizeSorted = new ArrayList[sizeList.size()];
+        for(int i=0; i<factorySizeSorted.length; i++) {
+            factorySizeSorted[i] = new ArrayList<Integer>();
+        }
+        for(int i=0; i<factorySizeList.size(); i++) {
+            factorySizeSorted[factorySizeList.get(i).getSizeId()-1].add(factorySizeList.get(i).getFactoryId());
+        }
+
+        // size의 개수 = sizeList의 크기
+        mv.addObject("size", sizeList.size());
+        // sizeList : size 테이블 전체 조회한 것
+        mv.addObject("sizeList", sizeList);
+        // factorySizeSorted : factorySize 리스트를 사이즈별로 재배열
+        mv.addObject("factorySizeSorted", factorySizeSorted);
+
+        return mv;
     }
 
     @GetMapping("/factory/{factoryId}")

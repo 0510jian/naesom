@@ -1,5 +1,6 @@
 package som.som.Entity;
 
+import groovyjarjarantlr4.v4.runtime.misc.NotNull;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,15 +16,22 @@ import java.util.Date;
 public class event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull
     @Column
     private int id;
-    @Column
-    private String title;
+
     @Column(name = "content_id")
+    @NotNull
     private int contentId;
+
+    @Column
+    @NotNull
+    private String title;
+
     @Column(name = "date_start")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateStart;
+
     @Column(name = "date_end")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateEnd;
