@@ -44,7 +44,6 @@ public class factory {
     private Integer duration;
 
     @Column
-    @NotNull
     private boolean certification;
 
     @Column

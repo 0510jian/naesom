@@ -1,0 +1,38 @@
+.frame_grid {
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 300px));
+}
+
+.frame_item {
+    width:270px;
+    height:270px;
+    padding: 10px;
+    text-align: center;
+    justify-items: center;
+}
+
+.thumbnailFr, .frame_thumb {
+    width: 250px;
+    height:250px;
+    margin: auto;
+    object-fit: cover;
+}
+
+.frame_description {
+    width: 190px;
+    height:190px;
+
+    position: absolute;
+    padding: 30px;
+    background: black;
+    color: white;
+    opacity: 0;
+    transition: 0.3s;
+
+    text-align: center;
+    line-height: 31px;
+}
+
+.frame_description:hover {
+    opacity: 0.5;
+}

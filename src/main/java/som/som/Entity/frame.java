@@ -33,4 +33,19 @@ public class frame {
     @Column
     @NotNull
     private String url;
+
+    @Transient
+    private String description;
+
+    @Transient
+    private String title;
+
+    @Transient
+    private String image;
+
+    public void setMetadata(String description, String title, String image) {
+        this.description = description;
+        this.title = title;
+        this.image = image;
+    }
 }

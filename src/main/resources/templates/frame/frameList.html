@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="fragment/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>내솜 :: 공장</title>
+    <link rel="stylesheet" th:href="@{/static/css/default.css?after}">
+    <link rel="stylesheet" th:href="@{/static/css/frame.css?after}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+</head>
+<body>
+<th:block layout:fragment="content">
+    <div id="contents">
+        <div id="filter">
+            <details open>
+                <summary><span>▼</span> 조건</summary>
+                <ul>
+                    <li class="filter_item">
+                        <label>
+                            <input type="checkbox" id="reprint" onclick="check()">
+                            <span>재배포</span>
+                        </label>
+                    </li>
+                    <li class="filter_item">
+                        <label>
+                            <input type="checkbox" id="commision" onclick="check()">
+                            <span>커미션</span>
+                        </label>
+                    </li>
+                    <li class="filter_item">
+                        <label>
+                            <input type="checkbox" id="grouporder" onclick="check()">
+                            <span>공동제작</span>
+                        </label>
+                    </li>
+                    <li class="filter_item">
+                        <label>
+                            <input type="checkbox" id="personal" onclick="check()">
+                            <span>개인제작</span>
+                        </label>
+                    </li>
+                    <li class="filter_item">
+                        <label>
+                            <input type="checkbox" id="credit" onclick="check()">
+                            <span>제작자표기</span>
+                        </label>
+                    </li>
+                </ul>
+            </details>
+        </div>
+        <div id="content_grid">
+            <div id="search">
+                <form action="/frame/search" method="get">
+                    <input type="search" id="query" name="query">
+                    <button type="submit" class="btn_search">
+                        <span class="material-symbols-outlined">search</span>
+                    </button>
+                </form>
+            </div>
+            <div id="frames">
+                <div id="warning_noFrame">해당 조건의 도안틀이 존재하지 않습니다.</div>
+                <ul class="frame_grid">
+                    <th:block th:unless="${frameList == null}">
+                        <th:block th:if="${#lists.size(frameList)} > 0" th:each="frame:${frameList}">
+                            <li class="frame_item" th:id="'frame_' + ${frame.id}">
+                                <div class="thumbnailFr">
+                                    <a th:href="${frame.url}">
+                                        <div class="frame_description" th:id="${'thumb_' + frame.id}" th:text="${'제작자 : ' + frame.illustrator}"></div>
+                                        <img th:src="${frame.image}" class="frame_thumb">
+                                    </a>
+                                </div>
+                            </li>
+                        </th:block>
+                    </th:block>
+                </ul>
+            </div>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>
+
+<script th:inline="javascript">
+    window.onload = function() {
+        warning(false);
+        setFrameDescription();
+
+    }
+
+    function setFrameDescription() {
+        var frame_description_list = document.getElementsByClassName("frame_description");
+
+        var license_list = [[${licenseList}]]
+        var license_map = new Map(); // id로 인덱스값 찾기
+        for(var i=0; i<license_list.length; i++) {
+            license_map.set(license_list[i].id, i);
+        }
+
+        for(var i=0; i<frame_description_list.length; i++) {
+            var text = frame_description_list[i].innerText; // 제작자만 세팅되어 있음
+            var id = frame_description_list[i].id.replace("thumb_", "");
+            var index = license_map.get(id *= 1); // str to int
+
+            var reprint, commision, grouporder, personal, credit;
+            if(license_list[index].reprint) reprint = "O";
+            else reprint = "X";
+            if(license_list[index].commision) commision = "O";
+            else commision = "X";
+            if(license_list[index].grouporder) grouporder = "O";
+            else grouporder = "X";
+            if(license_list[index].personal) personal = "O";
+            else personal = "X";
+            if(license_list[index].credit) credit = "O";
+            else credit = "X";
+
+            text = text + '\n재배포 : ' + reprint + '\n커미션 : ' + commision + '\n공동제작 : ' + grouporder + '\n개인제작 : ' + personal + '\n제작자 표기 : ' + credit;
+            frame_description_list[i].innerText = text;
+        }
+    }
+
+    function check() {
+        warning(false);
+        showAll();
+        // id로 인덱스를 찾을 수 있도록 license list > map
+        var license_list = [[${licenseList}]]
+        var license_map = new Map(); // id로 인덱스값 찾기
+        for(var i=0; i<license_list.length; i++) {
+            license_map.set(license_list[i].id, i);
+        }
+
+        checkReprint(license_list, license_map);
+        checkCommision(license_list, license_map);
+        checkGrouporder(license_list, license_map);
+        checkPersonal(license_list, license_map);
+        checkCredit(license_list, license_map);
+
+        if(document.getElementById("frames").innerText == "") {
+            warning(true);
+        }
+    }
+
+    function checkReprint(license_list, license_map) {
+        var reprint = document.getElementById("reprint");
+        if(reprint.checked) {
+            var frame_list = [[${frameList}]]
+            for(var i=0; i<frame_list.length; i++) {
+                var frame_id = frame_list[i].id;
+                var license = license_list[license_map.get(frame_id)];
+                if(!license.reprint) {
+                    document.getElementById("frame_" + frame_list[i].id).style.display = 'none';
+                }
+            }
+        }
+    }
+
+    function checkCommision(license_list, license_map) {
+        var commision = document.getElementById("commision");
+        if(commision.checked) {
+            var frame_list = [[${frameList}]]
+            for(var i=0; i<frame_list.length; i++) {
+                var frame_id = frame_list[i].id;
+                var license = license_list[license_map.get(frame_id)];
+                if(!license.commision) {
+                    document.getElementById("frame_" + frame_list[i].id).style.display = 'none';
+                }
+            }
+        }
+    }
+
+    function checkGrouporder(license_list, license_map) {
+        var grouporder = document.getElementById("grouporder");
+        if(grouporder.checked) {
+            var frame_list = [[${frameList}]]
+            for(var i=0; i<frame_list.length; i++) {
+                var frame_id = frame_list[i].id;
+                var license = license_list[license_map.get(frame_id)];
+                if(!license.grouporder) {
+                    document.getElementById("frame_" + frame_list[i].id).style.display = 'none';
+                }
+            }
+        }
+    }
+
+    function checkPersonal(license_list, license_map) {
+        var personal = document.getElementById("personal");
+        if(personal.checked) {
+            var frame_list = [[${frameList}]]
+            for(var i=0; i<frame_list.length; i++) {
+                var frame_id = frame_list[i].id;
+                var license = license_list[license_map.get(frame_id)];
+                if(!license.personal) {
+                    document.getElementById("frame_" + frame_list[i].id).style.display = 'none';
+                }
+            }
+        }
+    }
+
+    function checkCredit(license_list, license_map) {
+        var credit = document.getElementById("credit");
+        if(credit.checked) {
+            var frame_list = [[${frameList}]]
+            for(var i=0; i<frame_list.length; i++) {
+                var frame_id = frame_list[i].id;
+                var license = license_list[license_map.get(frame_id)];
+                if(!license.credit) {
+                    document.getElementById("frame_" + frame_list[i].id).style.display = 'none';
+                }
+            }
+        }
+    }
+
+    function warning(value) {
+        if(value) {
+            document.getElementById("warning_noFrame").style.display = 'block';
+        } else {
+            document.getElementById("warning_noFrame").style.display = 'none';
+        }
+    }
+
+    function hideAll() {
+        warning(false);
+        var frame_item = document.getElementsByClassName("frame_item");
+        for(var i=0; i<frame_item.length; i++) {
+            frame_item[i].style.display = 'none';
+        }
+    }
+
+    function showAll() {
+        var frame_item = document.getElementsByClassName("frame_item");
+        for(var i=0; i<frame_item.length; i++) {
+            frame_item[i].style.display = 'block';
+        }
+    }
+
+
+</script>

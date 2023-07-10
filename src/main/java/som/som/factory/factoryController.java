@@ -1,6 +1,9 @@
 package som.som.factory;
 
+import jakarta.persistence.OrderBy;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +16,7 @@ import som.som.Entity.factorySize;
 import som.som.Entity.size;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,6 +45,14 @@ public class factoryController {
 
         List<factorySize> factorySizeList = factorySizeRepository.findAll();
         List<size> sizeList = sizeRepository.findAll();
+        // size를 오름차순 정렬
+        sizeList.sort(new Comparator<size>() {
+            @Override
+            public int compare(size o1, size o2) {
+                return Integer.parseInt(o1.getSize()) - Integer.parseInt(o2.getSize());
+            }
+        });
+
         ArrayList<Integer>[] factorySizeSorted = new ArrayList[sizeList.size()];
         for(int i=0; i<factorySizeSorted.length; i++) {
             factorySizeSorted[i] = new ArrayList<Integer>();
