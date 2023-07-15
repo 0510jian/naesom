@@ -128,9 +128,23 @@ nav {
     padding-top: 5px;
 }
 
+#toolbar {
+    padding-bottom: 50px;
+}
+.page_count {
+    width:20px;
+    display: inline-block;
+}
+#paging {
+    float: left;
+}
+
+.page-item {
+    display: inline-block;
+}
+
 #search {
-    text-align: right;
-    margin-bottom: 20px;
+    float:right;
 }
 
 .btn_search {

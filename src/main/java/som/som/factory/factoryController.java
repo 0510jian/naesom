@@ -1,9 +1,7 @@
 package som.som.factory;
 
-import jakarta.persistence.OrderBy;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +22,9 @@ import java.util.Optional;
 @RequestMapping("")
 public class factoryController {
     @Autowired
+    private som.som.Service.factoryService factoryService;
+
+    @Autowired
     private som.som.Repository.factoryRepository factoryRepository;
     @Autowired
     private som.som.Repository.sizeRepository sizeRepository;
@@ -34,14 +35,16 @@ public class factoryController {
     @Autowired
     private som.som.Repository.factoryExtraRepository factoryExtraRepository;
 
+
     @GetMapping("/factory")
-    public ModelAndView factoryMain(
+    public ModelAndView factoryMainPaging(
+            @RequestParam(name = "page", defaultValue = "0") int page
     ) throws Exception {
         ModelAndView mv = new ModelAndView("factory/factoryList");
 
         // factory 리스트
-        List<factory> factoryList = factoryRepository.findAll();
-        mv.addObject("factoryList", factoryList);
+        Page<factory> factoryList = factoryService.getFactory(page);
+        mv.addObject("factoryList" ,factoryList);
 
         List<factorySize> factorySizeList = factorySizeRepository.findAll();
         List<size> sizeList = sizeRepository.findAll();
@@ -70,6 +73,8 @@ public class factoryController {
 
         return mv;
     }
+
+
 
 
     @GetMapping("/factory/search")

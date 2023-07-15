@@ -46,13 +46,44 @@
             </details>
         </div>
         <div id="content_grid">
-            <div id="search">
-                <form action="/factory/search" method="get">
-                    <input type="search" id="query" name="query">
-                    <button type="submit" class="btn_search">
-                        <span class="material-symbols-outlined">search</span>
-                    </button>
-                </form>
+            <div id="toolbar">
+                <div id="paging" th:if="${!factoryList.isEmpty()}">
+                    <ul class="pagination">
+                        <input type="hidden" id="pageNum" th:value="${factoryList.number}">
+                        <li class="page-item" th:if="${factoryList.hasPrevious} ? 'disabled'">
+                            <a class="page-link" th:href="@{|?page=0|}">
+                                <span>&lt;&lt;</span>
+                            </a>
+                        </li>
+                        <li class="page-item" th:if="${factoryList.hasPrevious} ? 'disabled'">
+                            <a class="page-link" th:href="@{|?page=${factoryList.number-1}|}">
+                                <span>&lt;</span>
+                            </a>
+                        </li>
+                        <li class="page_count" th:each="page: ${#numbers.sequence(0, factoryList.totalPages-1)}"
+                            th:if="${page >= factoryList.number - 5 and page <= factoryList.number+5}">
+                            <a th:text="${page + 1}" th:id="${'page' + page}" th:href="'?page=' + ${page}"></a>
+                        </li>
+                        <li class="page-item" th:if="${factoryList.hasNext} ? 'disabled'">
+                            <a class="page-link" th:href="@{|?page=${factoryList.number+1}|}">
+                                <span>&gt;</span>
+                            </a>
+                        </li>
+                        <li class="page-item" th:if="${factoryList.hasNext} ? 'disabled'">
+                            <a class="page-link" th:href="@{|?page=${factoryList.totalPages-1}|}">
+                                <span>&gt;&gt;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div id="search">
+                    <form action="/factory/search" method="get">
+                        <input type="search" id="query" name="query">
+                        <button type="submit" class="btn_search">
+                            <span class="material-symbols-outlined">search</span>
+                        </button>
+                    </form>
+                </div>
             </div>
             <div id="factories">
                 <div id="warning_noFactory">해당 조건의 공장이 존재하지 않습니다.</div>
@@ -61,7 +92,7 @@
                         <th:block th:if="${#lists.size(factoryList)} > 0" th:each="factory:${factoryList}">
                             <li class="factory_item" th:id="factory_ + ${factory.id}">
                                 <div class="thumbnail">
-                                    <a href="">
+                                    <a href="/factory/" th:attrappend="href=${factory.id}">
                                         <img class="factory_thumb">
                                     </a>
                                 </div>
@@ -75,6 +106,7 @@
                     </th:block>
                 </ul>
             </div>
+
         </div>
     </div>
     </th:block>
@@ -83,7 +115,14 @@
 
 <script th:inline="javascript">
     window.onload = function() {
+        pageNumCheck()
         warning(false);
+    }
+
+    function pageNumCheck() {
+        var pageNum = document.getElementById("pageNum").value;
+        var pageItem = document.getElementById("page" + pageNum);
+        pageItem.style.color = "red";
     }
 
     function warning(value) {
@@ -136,7 +175,7 @@
         hideAll();
 
         var filter_size = document.getElementsByClassName("filter_size");
-        var factory_item = document.getElementsByClassName("factory_item");
+        //var factory_item = document.getElementsByClassName("factory_item");
 
         var factorySizeSorted = [[${factorySizeSorted}]]
         var factoryIdList = new Set();
