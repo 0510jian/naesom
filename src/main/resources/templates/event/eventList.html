@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="fragment/layout">
+<head>
+  <meta charset="UTF-8">
+  <title>내솜 :: 공장</title>
+  <link rel="stylesheet" th:href="@{/static/css/default.css?after}">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+</head>
+<body>
+<th:block layout:fragment="content">
+  <div id="contents">
+    <div id="filter">
+      <details open>
+        <summary><span>▼</span> 크기</summary>
+        <ul>
+          <th:block th:if="${size > 0}">
+            <th:block th:each="eachSize:${sizeList}">
+              <li class="filter_item">
+                <label>
+                  <input type="checkbox" class="filter_size" th:value="size_ + ${eachSize.id}" onclick="check()">
+                  <span th:text="${eachSize.size} + 'cm'"></span>
+                </label>
+              </li>
+            </th:block>
+          </th:block>
+          <th:block th:unless="${size > 0}">
+            <li>no size select</li>
+          </th:block>
+        </ul>
+      </details>
+      <hr id="filter_hr">
+      <details open>
+        <summary><span>▼</span> 추가 조건</summary>
+        <ul>
+          <li class="filter_item">
+            <label><input type="checkbox" id="ko_csr" onclick="check()">한국어 상담</label>
+          </li>
+          <li class="filter_item">
+            <label><input type="checkbox" id="personal" onclick="check()">개인제작(사생)</label>
+          </li>
+          <li class="filter_item">
+            <label><input type="checkbox" id="certification" onclick="check()">사업자 인증</label>
+          </li>
+        </ul>
+      </details>
+    </div>
+    <div id="content_grid">
+      <div id="toolbar">
+        <div id="paging" th:if="${!factoryList.isEmpty()}">
+          <ul class="pagination">
+            <input type="hidden" id="pageNum" th:value="${factoryList.number}">
+            <li class="page-item" th:if="${factoryList.hasPrevious} ? 'disabled'">
+              <a class="page-link" th:href="@{|?page=0|}">
+                <span>&lt;&lt;</span>
+              </a>
+            </li>
+            <li class="page-item" th:if="${factoryList.hasPrevious} ? 'disabled'">
+              <a class="page-link" th:href="@{|?page=${factoryList.number-1}|}">
+                <span>&lt;</span>
+              </a>
+            </li>
+            <li class="page_count" th:each="page: ${#numbers.sequence(0, factoryList.totalPages-1)}"
+                th:if="${page >= factoryList.number - 5 and page <= factoryList.number+5}">
+              <a th:text="${page + 1}" th:id="${'page' + page}" th:href="'?page=' + ${page}"></a>
+            </li>
+            <li class="page-item" th:if="${factoryList.hasNext} ? 'disabled'">
+              <a class="page-link" th:href="@{|?page=${factoryList.number+1}|}">
+                <span>&gt;</span>
+              </a>
+            </li>
+            <li class="page-item" th:if="${factoryList.hasNext} ? 'disabled'">
+              <a class="page-link" th:href="@{|?page=${factoryList.totalPages-1}|}">
+                <span>&gt;&gt;</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div id="search">
+          <form action="/factory/search" method="get">
+            <input type="search" id="query" name="query">
+            <button type="submit" class="btn_search">
+              <span class="material-symbols-outlined">search</span>
+            </button>
+          </form>
+        </div>
+      </div>
+      <div id="factories">
+        <div id="warning_noFactory" style="display: none;">해당 조건의 공장이 존재하지 않습니다.</div>
+        <ul class="factory_grid">
+          <th:block th:unless="${factoryList == null}">
+            <th:block th:if="${#lists.size(factoryList)} > 0" th:each="factory:${factoryList}">
+              <li class="factory_item" th:id="factory_ + ${factory.id}">
+                <div class="thumbnail">
+                  <a href="/factory/" th:attrappend="href=${factory.id}">
+                    <img class="factory_thumb">
+                  </a>
+                </div>
+                <div class="description">
+                  <a href="/factory/" th:attrappend="href=${factory.id}">
+                    <span th:text="${factory.koName}"></span>
+                  </a>
+                </div>
+              </li>
+            </th:block>
+          </th:block>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</th:block>
+</body>
+</html>
+
+<script th:inline="javascript">
+  window.onload = function() {
+    pageNumCheck()
+    warning(false);
+  }
+
+  function pageNumCheck() {
+    var pageNum = document.getElementById("pageNum").value;
+    var pageItem = document.getElementById("page" + pageNum);
+    pageItem.style.color = "red";
+  }
+
+  function warning(value) {
+    if(value) {
+      document.getElementById("warning_noFactory").style.display = 'block';
+    } else {
+      document.getElementById("warning_noFactory").style.display = 'none';
+    }
+  }
+
+  function hideAll() {
+    warning(false);
+    var factory_item = document.getElementsByClassName("factory_item");
+    for(var i=0; i<factory_item.length; i++) {
+      factory_item[i].style.display = 'none';
+    }
+  }
+
+  function showAll() {
+    var factory_item = document.getElementsByClassName("factory_item");
+    for(var i=0; i<factory_item.length; i++) {
+      factory_item[i].style.display = 'block';
+    }
+  }
+
+  function hideFactory(factoryIdList) {
+    for(var factory of factoryIdList) {
+      document.getElementById("factory_" + factory).style.display = 'none';
+    }
+  }
+
+  function showFactory(factoryIdList) {
+    for(var factory of factoryIdList) {
+      document.getElementById("factory_" + factory).style.display = 'block';
+    }
+  }
+
+  function check() {
+    checkSize();
+    checkKoCsr();
+    checkPersonal();
+    checkCertification();
+
+    if(document.getElementById("factories").innerText == "") {
+      warning(true);
+    }
+  }
+
+  function checkSize() {
+    hideAll();
+
+    var filter_size = document.getElementsByClassName("filter_size");
+    //var factory_item = document.getElementsByClassName("factory_item");
+
+    var factorySizeSorted = [[${factorySizeSorted}]]
+    var factoryIdList = new Set();
+
+    // filter_size의 value값에 해당하는 factoryId set 생성
+    var countChecked = 0;
+    for(var i=0; i<filter_size.length; i++) {
+      if(filter_size[i].checked) {
+        countChecked++;
+        var value = filter_size[i].value.split("_");
+        for(var j=0; j<factorySizeSorted[value[1]-1].length; j++) {
+          factoryIdList.add(factorySizeSorted[value[1]-1][j]);
+        }
+      }
+    }
+
+    // 크기 중 check된 게 없을 때
+    if(countChecked < 1) {
+      showAll();
+    } else { // 크기 조건 충족한 공장 display=block
+      showFactory(factoryIdList);
+    }
+  }
+
+  function checkKoCsr() {
+    var koCsr = document.getElementById("ko_csr");
+    if(koCsr.checked) {
+      var factoryList = [[${factoryList}]];
+      var factoryIdList = new Set();
+
+      for(var i=0; i<factoryList.length; i++) {
+        if(!factoryList[i].koCsr) {
+          factoryIdList.add(factoryList[i].id);
+        }
+      }
+      hideFactory(factoryIdList);
+    }
+  }
+
+  function checkPersonal() {
+    var personal = document.getElementById("personal");
+
+    if(personal.checked) {
+      var factoryList = [[${factoryList}]];
+      var factoryIdList = new Set();
+
+      for(var i=0; i<factoryList.length; i++) {
+        if(!factoryList[i].single) {
+          factoryIdList.add(factoryList[i].id);
+        }
+      }
+      hideFactory(factoryIdList);
+    }
+  }
+
+  function checkCertification() {
+    var certification = document.getElementById("certification");
+
+    if(certification.checked) {
+      var factoryList = [[${factoryList}]];
+      var factoryIdList = new Set();
+
+      for(var i=0; i<factoryList.length; i++) {
+        if(!factoryList[i].certification) {
+          factoryIdList.add(factoryList[i].id);
+        }
+      }
+      hideFactory(factoryIdList);
+    }
+  }
+</script>

@@ -49,16 +49,50 @@
             </details>
         </div>
         <div id="content_grid">
-            <div id="search">
-                <form action="/frame/search" method="get">
-                    <input type="search" id="query" name="query">
-                    <button type="submit" class="btn_search">
-                        <span class="material-symbols-outlined">search</span>
-                    </button>
-                </form>
+            <div id="toolbar">
+                <div id="paging" th:if="${!frameList.isEmpty()}" style="display: none;">
+                    <ul class="pagination">
+                        <input type="hidden" id="pageNum" th:value="${frameList.number}">
+                        <li class="page-item" th:if="${frameList.hasPrevious} ? 'disabled'">
+                            <a class="page-link" th:href="@{|?page=0|}">
+                                <span>&lt;&lt;</span>
+                            </a>
+                        </li>
+                        <li class="page-item" th:if="${frameList.hasPrevious} ? 'disabled'">
+                            <a class="page-link" th:href="@{|?page=${frameList.number-1}|}">
+                                <span>&lt;</span>
+                            </a>
+                        </li>
+                        <li class="page_count" th:each="page: ${#numbers.sequence(0, frameList.totalPages-1)}"
+                            th:if="${page >= frameList.number - 5 and page <= frameList.number+5}">
+                            <a th:text="${page + 1}" th:id="${'page' + page}" th:href="'?page=' + ${page}"></a>
+                        </li>
+                        <li class="page-item" th:if="${frameList.hasNext} ? 'disabled'">
+                            <a class="page-link" th:href="@{|?page=${frameList.number+1}|}">
+                                <span>&gt;</span>
+                            </a>
+                        </li>
+                        <li class="page-item" th:if="${frameList.hasNext} ? 'disabled'">
+                            <a class="page-link" th:href="@{|?page=${frameList.totalPages-1}|}">
+                                <span>&gt;&gt;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div id="addPost">
+                    <button><a href="/frame/write">글 작성</a></button>
+                </div>
+                <div id="search">
+                    <form action="/frame/search" method="get">
+                        <input type="search" id="query" name="query">
+                        <button type="submit" class="btn_search">
+                            <span class="material-symbols-outlined">search</span>
+                        </button>
+                    </form>
+                </div>
             </div>
             <div id="frames">
-                <div id="warning_noFrame">해당 조건의 도안틀이 존재하지 않습니다.</div>
+                <div id="warning_noFrame" style="display: none;">해당 조건의 도안틀이 존재하지 않습니다.</div>
                 <ul class="frame_grid">
                     <th:block th:unless="${frameList == null}">
                         <th:block th:if="${#lists.size(frameList)} > 0" th:each="frame:${frameList}">
@@ -82,9 +116,15 @@
 
 <script th:inline="javascript">
     window.onload = function() {
+        pageNumCheck();
         warning(false);
         setFrameDescription();
+    }
 
+    function pageNumCheck() {
+        var pageNum = document.getElementById("pageNum").value;
+        var pageItem = document.getElementById("page" + pageNum);
+        pageItem.style.color = "red";
     }
 
     function setFrameDescription() {
@@ -142,10 +182,12 @@
     function checkReprint(license_list, license_map) {
         var reprint = document.getElementById("reprint");
         if(reprint.checked) {
-            var frame_list = [[${frameList}]]
+            var frame_list = [[${frameList}]].content
+
             for(var i=0; i<frame_list.length; i++) {
                 var frame_id = frame_list[i].id;
                 var license = license_list[license_map.get(frame_id)];
+
                 if(!license.reprint) {
                     document.getElementById("frame_" + frame_list[i].id).style.display = 'none';
                 }
@@ -156,7 +198,7 @@
     function checkCommision(license_list, license_map) {
         var commision = document.getElementById("commision");
         if(commision.checked) {
-            var frame_list = [[${frameList}]]
+            var frame_list = [[${frameList}]].content
             for(var i=0; i<frame_list.length; i++) {
                 var frame_id = frame_list[i].id;
                 var license = license_list[license_map.get(frame_id)];
@@ -170,7 +212,7 @@
     function checkGrouporder(license_list, license_map) {
         var grouporder = document.getElementById("grouporder");
         if(grouporder.checked) {
-            var frame_list = [[${frameList}]]
+            var frame_list = [[${frameList}]].content
             for(var i=0; i<frame_list.length; i++) {
                 var frame_id = frame_list[i].id;
                 var license = license_list[license_map.get(frame_id)];
@@ -184,7 +226,7 @@
     function checkPersonal(license_list, license_map) {
         var personal = document.getElementById("personal");
         if(personal.checked) {
-            var frame_list = [[${frameList}]]
+            var frame_list = [[${frameList}]].content
             for(var i=0; i<frame_list.length; i++) {
                 var frame_id = frame_list[i].id;
                 var license = license_list[license_map.get(frame_id)];
@@ -198,7 +240,7 @@
     function checkCredit(license_list, license_map) {
         var credit = document.getElementById("credit");
         if(credit.checked) {
-            var frame_list = [[${frameList}]]
+            var frame_list = [[${frameList}]].content
             for(var i=0; i<frame_list.length; i++) {
                 var frame_id = frame_list[i].id;
                 var license = license_list[license_map.get(frame_id)];

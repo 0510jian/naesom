@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="fragment/layout">
+<head>
+  <meta charset="UTF-8">
+  <title>내솜 :: 공장</title>
+  <link rel="stylesheet" th:href="@{/static/css/default.css?after}">
+  <link rel="stylesheet" th:href="@{/static/css/factory.css?after}">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+</head>
+<body>
+<th:block layout:fragment="content">
+  <div id="contents">
+    <div class="factory_summary">
+      <div class="factory_thumb">
+        <img>
+      </div>
+      <div class="factory_info">
+        <div class="info_bind">
+          <h3><span>공장 정보</span></h3>
+          <table>
+            <tr>
+              <td>웨이보 ID</td>
+              <td>
+                <input type="text">
+              </td>
+            </tr>
+            <tr>
+              <td>위챗 ID</td>
+              <td>
+                <input type="text">
+              </td>
+            </tr>
+            <tr>
+              <td>트위터</td>
+              <td>
+                <input type="text">
+              </td>
+            </tr>
+          </table>
+          <hr>
+        </div>
+      </div>
+    </div>
+    <div class="factory_price">
+      <h3>가격 정보</h3>
+      <div class="priceItem">
+        <select>
+          <option>
+
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
+</th:block>
+</body>
+</html>
+
+<script th:inline="javascript">
+</script>

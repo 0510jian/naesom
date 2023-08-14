@@ -47,7 +47,7 @@
         </div>
         <div id="content_grid">
             <div id="toolbar">
-                <div id="paging" th:if="${!factoryList.isEmpty()}">
+                <div id="paging" th:if="${!factoryList.isEmpty()}" style="display: none;">
                     <ul class="pagination">
                         <input type="hidden" id="pageNum" th:value="${factoryList.number}">
                         <li class="page-item" th:if="${factoryList.hasPrevious} ? 'disabled'">
@@ -76,6 +76,9 @@
                         </li>
                     </ul>
                 </div>
+                <div id="addPost">
+                    <button><a href="/factory/write">글 작성</a></button>
+                </div>
                 <div id="search">
                     <form action="/factory/search" method="get">
                         <input type="search" id="query" name="query">
@@ -86,7 +89,7 @@
                 </div>
             </div>
             <div id="factories">
-                <div id="warning_noFactory">해당 조건의 공장이 존재하지 않습니다.</div>
+                <div id="warning_noFactory" style="display: none;">해당 조건의 공장이 존재하지 않습니다.</div>
                 <ul class="factory_grid">
                     <th:block th:unless="${factoryList == null}">
                         <th:block th:if="${#lists.size(factoryList)} > 0" th:each="factory:${factoryList}">
@@ -106,7 +109,6 @@
                     </th:block>
                 </ul>
             </div>
-
         </div>
     </div>
     </th:block>
@@ -155,8 +157,10 @@
     }
 
     function showFactory(factoryIdList) {
-        for(var factory of factoryIdList) {
-            document.getElementById("factory_" + factory).style.display = 'block';
+        if(factoryIdList != null) {
+            for(var factory of factoryIdList) {
+                document.getElementById("factory_" + factory).style.display = 'block';
+            }
         }
     }
 
@@ -166,7 +170,7 @@
         checkPersonal();
         checkCertification();
 
-        if(document.getElementById("factories").innerText == "") {
+        if(document.getElementById("factories").innerText === "") {
             warning(true);
         }
     }
@@ -197,13 +201,13 @@
             showAll();
         } else { // 크기 조건 충족한 공장 display=block
             showFactory(factoryIdList);
-        }        
+        }
     }
 
     function checkKoCsr() {
         var koCsr = document.getElementById("ko_csr");
         if(koCsr.checked) {
-            var factoryList = [[${factoryList}]];
+            var factoryList = [[${factoryList}]].content
             var factoryIdList = new Set();
 
             for(var i=0; i<factoryList.length; i++) {
@@ -219,11 +223,11 @@
         var personal = document.getElementById("personal");
 
         if(personal.checked) {
-            var factoryList = [[${factoryList}]];
+            var factoryList = [[${factoryList}]].content
             var factoryIdList = new Set();
 
             for(var i=0; i<factoryList.length; i++) {
-                if(!factoryList[i].single) {
+                if(!factoryList[i].personal) {
                     factoryIdList.add(factoryList[i].id);
                 }
             }
@@ -235,7 +239,7 @@
         var certification = document.getElementById("certification");
 
         if(certification.checked) {
-            var factoryList = [[${factoryList}]];
+            var factoryList = [[${factoryList}]].content
             var factoryIdList = new Set();
 
             for(var i=0; i<factoryList.length; i++) {
@@ -246,6 +250,4 @@
             hideFactory(factoryIdList);
         }
     }
-    
-
 </script>

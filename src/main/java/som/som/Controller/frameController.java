@@ -1,6 +1,7 @@
-package som.som.frame;
+package som.som.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,6 +13,8 @@ import som.som.Util;
 import java.util.HashMap;
 import java.util.List;
 
+import som.som.Service.frameService;
+
 @Controller
 public class frameController {
 
@@ -21,13 +24,18 @@ public class frameController {
     @Autowired
     private som.som.Repository.licenseRepository licenseRepository;
 
+    @Autowired
+    private frameService frameService;
+
     @GetMapping("/frame")
     public ModelAndView frameMain(
+            @RequestParam(name = "page", defaultValue = "0") int page
     ) throws Exception {
         ModelAndView mv = new ModelAndView("frame/frameList");
 
         // frame 리스트
-        List<frame> frameList = frameRepository.findAll();
+        Page<frame> frameList = frameService.getFrame(page);
+
         // metadata 추가
         for(frame frame : frameList) {
             HashMap<String, String> metadata = Util.getMetadataFromUrl(frame.getUrl());

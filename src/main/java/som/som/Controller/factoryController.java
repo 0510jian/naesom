@@ -1,4 +1,4 @@
-package som.som.factory;
+package som.som.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -37,7 +37,7 @@ public class factoryController {
 
 
     @GetMapping("/factory")
-    public ModelAndView factoryMainPaging(
+    public ModelAndView factoryList(
             @RequestParam(name = "page", defaultValue = "0") int page
     ) throws Exception {
         ModelAndView mv = new ModelAndView("factory/factoryList");
@@ -78,7 +78,7 @@ public class factoryController {
 
 
     @GetMapping("/factory/search")
-    public ModelAndView searchFactory(
+    public ModelAndView factorySearch(
             @RequestParam(name = "query") String query
     ) throws Exception {
         ModelAndView mv = new ModelAndView("factory/factoryList");
@@ -123,6 +123,15 @@ public class factoryController {
             fe.setOption(extraRepository.findById(fe.getExtraId()).get().getOption());
         }
         mv.addObject("factoryExtraList", factoryExtraList);
+
+        return mv;
+    }
+
+    @GetMapping("/factory/write")
+    public ModelAndView factoryWrite(
+
+    ) throws Exception {
+        ModelAndView mv = new ModelAndView("factory/factoryWrite");
 
         return mv;
     }

@@ -5,16 +5,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import som.som.Entity.factory;
+import som.som.Entity.frame;
+import som.som.Repository.frameRepository;
 
 @Service
-public class factoryService {
-
+public class frameService {
     @Autowired
-    private som.som.Repository.factoryRepository factoryRepository;
+    private frameRepository frameRepository;
 
-    public Page<factory> getFactory(int page) {
+    public Page<frame> getFrame(int page) {
         Pageable pageable = PageRequest.of(page, 999999);
-        return factoryRepository.findAll(pageable);
+        return frameRepository.findAll(pageable);
     }
 }
